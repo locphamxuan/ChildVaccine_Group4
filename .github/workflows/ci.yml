@@ -11,12 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - - name: Build with Ant
-      - run: ant build
-
-      - name: Run tests with Ant
-      - run: ant test
-
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -26,6 +20,14 @@ jobs:
           distribution: 'temurin'
           java-version: '8'
 
+      # Nếu bạn muốn dùng Ant
+      - name: Build with Ant
+        run: ant build
+
+      - name: Run tests with Ant
+        run: ant test
+
+      # Nếu bạn muốn dùng Maven (bỏ nếu không cần)
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
