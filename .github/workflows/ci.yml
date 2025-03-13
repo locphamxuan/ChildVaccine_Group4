@@ -1,0 +1,43 @@
+name: Java CI with NetBeans
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
+      # Nếu bạn dùng Maven và muốn cache dependencies
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # Build và test bằng Maven hoặc Ant (tùy bạn chọn)
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Run unit tests
+        run: mvn test
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+              name: test-results
+              path: target/surefire-reports/
+
